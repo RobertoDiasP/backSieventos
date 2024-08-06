@@ -12,13 +12,14 @@ def add_pessoa():
     status = data.get('STATUS')
     telefone1 = data.get('TELEFONE1')
     cpf = data.get('CPF')
+    email = data.get('EMAIL')
 
     conn = get_connection()
     cursor = conn.cursor()
 
     # Corrigido: número de valores deve corresponder ao número de colunas
-    query = "INSERT INTO PESSOA (RAZAOSOCIAL, STATUS, TELEFONE1, CPF) VALUES (?, ?, ?, ?)"
-    cursor.execute(query, (razaosocial, status, telefone1,cpf))
+    query = "INSERT INTO PESSOA (RAZAOSOCIAL, STATUS, TELEFONE1, CPF, EMAIL) VALUES (?, ?, ?, ?, ?)"
+    cursor.execute(query, (razaosocial, status, telefone1,cpf,email))
 
     conn.commit()
     conn.close()

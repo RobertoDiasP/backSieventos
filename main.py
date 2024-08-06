@@ -1,14 +1,15 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
+
+# Importação dos Blueprints
 from routes.empresa_routes import empresa_bp
 from routes.pessoaCad_routes import cadastro_bp
 from routes.pessoa_routes import pessoa_bp
 from routes.auth_routes import auth_bp
 from routes.cpf_routes import cpf_bp
 
-
 import config
-from flask_cors import CORS
 
 app = Flask(__name__)
 app.config.from_object(config.Config)

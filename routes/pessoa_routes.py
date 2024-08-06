@@ -1,3 +1,6 @@
+from flask import Flask, Blueprint, jsonify, request
+from flask_cors import CORS
+from utils.database import get_connection
 from flask import Blueprint, jsonify, request
 from utils.database import get_connection
 
@@ -25,22 +28,25 @@ def get_pessoas():
     conn.close()
     return jsonify(pessoas)
 
-@pessoa_bp.route('/pessoasadd', methods=['POST'])
-def add_pessoa():
-    data = request.json  # Obtém os dados JSON do corpo da requisição
-
-    nome = data.get('nome', '')
-    cpf = data.get('cpf', '')
-    telefone = data.get('telefone', '')
-
+@pessoa_bp.route('/pessoaId', methods=['GET'])
+def get_pessoa_by_id():
+    id = request.args.get('id', '')  # Obtém o parâmetro 'id' da URL, ou uma string vazia se não fornecido
 
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Insere os dados na tabela PESSOA (ajuste a consulta SQL conforme a estrutura do seu banco de dados)
-    query = "INSERT INTO PESSOA (RAZAOSOCIAL, CPF, TELEFONE1 ) VALUES (?, ?, ?, ?)"
-    cursor.execute(query, (nome, cpf, telefone))
-    conn.commit()
+    # Use o parâmetro 'id' na consulta SQL com o placeholder correto para Firebird
+    query = "SELECT * FROM vw_pessoa WHERE codigopessoa = ?"
+
+    cursor.execute(query, (id,))
+
+    # Obtenha os nomes das colunas
+    columns = [desc[0] for desc in cursor.description]
+
+    pessoas = []
+    for row in cursor.fetchall():
+        pessoa = dict(zip(columns, row))
+        pessoas.append(pessoa)
 
     conn.close()
-    return jsonify({"message": "Pessoa adicionada com sucesso"}), 201
+    return jsonify(pessoas, id)
