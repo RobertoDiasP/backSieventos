@@ -11,7 +11,7 @@ def get_cpf():
     cursor = conn.cursor()
 
     # Use o parâmetro 'cpf' na consulta SQL
-    query = "SELECT * FROM PESSOA WHERE CPF = ?"
+    query = "SELECT CODIGOPESSOA, RAZAOSOCIAL, TELEFONE1, EMAIL FROM PESSOA WHERE CPF = ?"
     cursor.execute(query, (cpf,))  # O CPF é comparado exatamente
 
     # Obtenha os nomes das colunas

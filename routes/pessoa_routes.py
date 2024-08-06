@@ -11,7 +11,7 @@ def get_pessoas():
     cursor = conn.cursor()
 
     # Use o parâmetro 'nome' na consulta SQL com o placeholder correto para Firebird
-    query = "SELECT * FROM PESSOA WHERE RAZAOSOCIAL LIKE ?"
+    query = "SELECT CODIGOPESSOA, RAZAOSOCIAL, TELEFONE1, EMAIL FROM PESSOA WHERE RAZAOSOCIAL LIKE ?"
     cursor.execute(query, ('%' + nome + '%',))
 
     # Obtenha os nomes das colunas
@@ -24,3 +24,23 @@ def get_pessoas():
 
     conn.close()
     return jsonify(pessoas)
+
+@pessoa_bp.route('/pessoasadd', methods=['POST'])
+def add_pessoa():
+    data = request.json  # Obtém os dados JSON do corpo da requisição
+
+    nome = data.get('nome', '')
+    cpf = data.get('cpf', '')
+    telefone = data.get('telefone', '')
+
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Insere os dados na tabela PESSOA (ajuste a consulta SQL conforme a estrutura do seu banco de dados)
+    query = "INSERT INTO PESSOA (RAZAOSOCIAL, CPF, TELEFONE1 ) VALUES (?, ?, ?, ?)"
+    cursor.execute(query, (nome, cpf, telefone))
+    conn.commit()
+
+    conn.close()
+    return jsonify({"message": "Pessoa adicionada com sucesso"}), 201
