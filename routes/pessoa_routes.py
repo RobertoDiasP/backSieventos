@@ -50,3 +50,27 @@ def get_pessoa_by_id():
 
     conn.close()
     return jsonify(pessoas, id)
+
+@pessoa_bp.route('/pessoaFinId', methods=['GET'])
+def get_pessoa_fin_by_id():
+    id = request.args.get('id', '')  # Obtém o parâmetro 'id' da URL, ou uma string vazia se não fornecido
+    aberto_quitado = request.args.get('aberto_quitado','')  # Obtém o parâmetro 'aberto_quitado' da URL,
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Use o parâmetro 'id' na consulta SQL com o placeholder correto para Firebird
+    query = "SELECT * FROM vw_contareceber WHERE ABERTO_QUITADO = ? and codigopessoa = ?"
+
+    cursor.execute(query, (aberto_quitado, id,))
+
+    # Obtenha os nomes das colunas
+    columns = [desc[0] for desc in cursor.description]
+
+    pessoas = []
+    for row in cursor.fetchall():
+        pessoa = dict(zip(columns, row))
+        pessoas.append(pessoa)
+
+    conn.close()
+    return jsonify(pessoas, id)
