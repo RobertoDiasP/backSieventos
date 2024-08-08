@@ -8,6 +8,7 @@ from routes.pessoaCad_routes import cadastro_bp
 from routes.pessoa_routes import pessoa_bp
 from routes.auth_routes import auth_bp
 from routes.cpf_routes import cpf_bp
+from routes.eventos_routes import evento_bp
 
 import config
 
@@ -24,6 +25,7 @@ app.register_blueprint(pessoa_bp, url_prefix='/api/')
 app.register_blueprint(auth_bp, url_prefix='/api/')
 app.register_blueprint(cpf_bp, url_prefix='/api/')
 app.register_blueprint(cadastro_bp, url_prefix='/api/')  # Prefixo para cadastro_bp
+app.register_blueprint(evento_bp, url_prefix='/api/')
 
 if __name__ == '__main__':
     app.run(debug=True)
