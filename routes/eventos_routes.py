@@ -42,6 +42,55 @@ def get_evento_by_ano_codigo():
     conn.close()
     return jsonify(eventos)
 
+@evento_bp.route('/eventoPessoa', methods=['GET'])
+def get_pessoa_evento():
+    evento_pessoa = request.args.get('codigoevento', '').strip()
+
+    # Inicializa a consulta SQL
+    query = "SELECT * FROM vw_pessoaevento WHERE codigoevento = ?"
+    params = []
+
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(query, (evento_pessoa,)) # Executa a consulta com os parâmetros
+
+    # Obtenha os nomes das colunas
+    columns = [desc[0] for desc in cursor.description]
+
+    pessoas = []
+    for row in cursor.fetchall():
+        pessoa = dict(zip(columns, row))
+        pessoas.append(pessoa)
+
+    conn.close()
+    return jsonify(pessoas)
+
+@evento_bp.route('/eventoFin', methods=['GET'])
+def get_evento_fin():
+    evento_fin = request.args.get('codigoevento', '').strip()
+
+    # Inicializa a consulta SQL
+    query = "SELECT * FROM vw_contareceber WHERE codigoevento = ?"
+    params = []
+
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(query, (evento_fin,)) # Executa a consulta com os parâmetros
+
+    # Obtenha os nomes das colunas
+    columns = [desc[0] for desc in cursor.description]
+
+    pessoas = []
+    for row in cursor.fetchall():
+        pessoa = dict(zip(columns, row))
+        pessoas.append(pessoa)
+
+    conn.close()
+    return jsonify(pessoas)
 
 
 
