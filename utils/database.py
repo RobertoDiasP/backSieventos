@@ -3,7 +3,8 @@ from config import Config
 
 def get_connection():
     return firebirdsql.connect(
-        host='localhost',
+        host=Config.FIREBIRD_HOST,
+        port=Config.FIREBIRD_PORT,
         database=Config.FIREBIRD_DATABASE,
         user=Config.FIREBIRD_USER,
         password=Config.FIREBIRD_PASSWORD,
