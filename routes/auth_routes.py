@@ -2,29 +2,37 @@
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from werkzeug.security import generate_password_hash, check_password_hash
+from utils.database import get_connection
 
 auth_bp = Blueprint('auth', __name__)
-
-# Usuários fictícios para exemplo
-USERS = {
-    "user@example.com": generate_password_hash("password123")
-}
-
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email', None)
     password = request.json.get('password', None)
 
-    user_password = USERS.get(email, None)
+    if not email or not password:
+        return jsonify({"msg": "Missing email or password"}), 400
 
-    if user_password and check_password_hash(user_password, password):
-        access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token), 200
-    else:
-        return jsonify({"msg": "Invalid credentials"}), 401
+    # Obter conexão com o banco de dados
+    conn = get_connection()
+    cursor = conn.cursor()
 
+    try:
+        # Consultar o banco de dados para obter a senha armazenada
+        cursor.execute("SELECT senha_web FROM usuario WHERE email = ?", (email,))
+        stored_password = cursor.fetchone()
+
+        if stored_password and stored_password[0] == password:
+            access_token = create_access_token(identity=email)
+            return jsonify(access_token=access_token), 200
+        else:
+            return jsonify({"msg": "Invalid credentials"}), 401
+    except Exception as e:
+        return jsonify({"msg": "Database error", "error": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
 
 @auth_bp.route('/protected', methods=['GET'])
 @jwt_required()
