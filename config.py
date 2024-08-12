@@ -8,7 +8,7 @@ class Config:
     # Configurações para Firebird
     FIREBIRD_HOST = 'localhost'  # Endereço IP do servidor Firebird
     FIREBIRD_PORT = 3050  # Porta padrão do Firebird
-    FIREBIRD_DATABASE = 'orignallisis'  # Caminho do banco de dados
+    FIREBIRD_DATABASE = 'C:/SiEventos/bancodedados/ORIGINALLIS.FDB'  # Caminho do banco de dados
     FIREBIRD_USER = 'SYSDBA'
-    FIREBIRD_PASSWORD = 'masterkey'
+    FIREBIRD_PASSWORD = 'F5sistemas'
     FIREBIRD_CHARSET = 'ISO8859_1'

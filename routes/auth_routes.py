@@ -12,7 +12,7 @@ def login():
     password = request.json.get('password', None)
 
     if not email or not password:
-        return jsonify({"msg": "Missing email or password"}), 400
+        return jsonify({"msg": "Email ou senha nao informados"}), 400
 
     # Obter conexão com o banco de dados
     conn = get_connection()
@@ -27,7 +27,7 @@ def login():
             access_token = create_access_token(identity=email)
             return jsonify(access_token=access_token), 200
         else:
-            return jsonify({"msg": "Invalid credentials"}), 401
+            return jsonify({"msg": "Credenciais Inválidas"}), 401
     except Exception as e:
         return jsonify({"msg": "Database error", "error": str(e)}), 500
     finally:
